@@ -153,6 +153,10 @@ The following graph shows the distribution of emotion samples present in the dat
 
 ---
 
+## Feature Importance
+
+![Feature Importance](feature_importance.png)
+
 ## Generated Files
 
 | File | Description |
@@ -237,6 +241,15 @@ Project executed successfully!
 - Web Application Deployment using Flask
 
 ---
+
+## Key Achievements
+
+- Processed 1248 speech recordings
+- Extracted 40 MFCC features per sample
+- Classified 7 human emotions
+- Achieved 62.80% test accuracy
+- Generated confusion matrix and distribution visualizations
+- Saved trained model for future predictions
 
 ## Author
 
