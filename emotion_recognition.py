@@ -133,7 +133,10 @@ def train_model(X_train, y_train):
 # Save Results
 # ======================================
 
-def save_results(accuracy, report, y):
+save_results(
+        accuracy,
+        report
+    )
 
     with open(
         RESULTS_PATH,
