@@ -119,21 +119,29 @@ Save trained model using Joblib.
 
 ## Model Performance
 
-### Overall Accuracy
+### Test Accuracy
 
-**62.80%**
+**60.00%**
+
+### Cross Validation Accuracy
+
+**40.94% (5-Fold Cross Validation)**
+
+### Execution Time
+
+**11.29 Seconds**
 
 ### Classification Report
 
 | Emotion | Precision | Recall | F1-Score |
 |----------|-----------|---------|-----------|
-| Angry | 0.71 | 0.74 | 0.72 |
-| Disgust | 0.56 | 0.57 | 0.56 |
-| Fearful | 0.52 | 0.57 | 0.54 |
-| Happy | 0.71 | 0.53 | 0.61 |
-| Neutral | 0.62 | 0.65 | 0.64 |
-| Sad | 0.57 | 0.50 | 0.53 |
-| Surprised | 0.68 | 0.84 | 0.75 |
+| Angry | 0.71 | 0.66 | 0.68 |
+| Disgust | 0.51 | 0.55 | 0.53 |
+| Fearful | 0.63 | 0.62 | 0.62 |
+| Happy | 0.58 | 0.46 | 0.51 |
+| Neutral | 0.73 | 0.58 | 0.65 |
+| Sad | 0.55 | 0.56 | 0.56 |
+| Surprised | 0.58 | 0.76 | 0.66 |
 
 ---
 
@@ -163,12 +171,13 @@ The following graph shows the distribution of emotion samples present in the dat
 |--------|-------------|
 | emotion_recognition.py | Main project source code |
 | emotion_model.pkl | Trained Random Forest model |
+| results.txt | Classification report and dataset statistics |
 | confusion_matrix.png | Confusion matrix visualization |
 | emotion_distribution.png | Dataset emotion distribution graph |
-| results.txt | Model evaluation results |
+| feature_importance.png | Feature importance visualization |
+| feature_importance.csv | Feature importance ranking |
 | README.md | Project documentation |
 | requirements.txt | Required Python libraries |
-
 ---
 
 ## Installation
@@ -204,15 +213,23 @@ python emotion_recognition.py
 ### Expected Output
 
 ```text
+Loading audio files...
 Dataset Loaded Successfully
 Samples: 1248
 
-Accuracy: 62.80%
+Cross Validation Accuracy: 40.94%
+
+========== MODEL RESULTS ==========
+Accuracy: 60.00%
 
 Results saved successfully!
 Model saved successfully!
+Feature importance CSV saved!
 Confusion matrix saved!
 Emotion distribution graph saved!
+Feature importance graph saved!
+
+Execution Time: 11.29 seconds
 
 Project executed successfully!
 ```
@@ -240,16 +257,36 @@ Project executed successfully!
 - Speech-to-Text Integration
 - Web Application Deployment using Flask
 
+
 ---
 
+### Key Achievements
+
+```md
 ## Key Achievements
 
-- Processed 1248 speech recordings
-- Extracted 40 MFCC features per sample
-- Classified 7 human emotions
-- Achieved 62.80% test accuracy
-- Generated confusion matrix and distribution visualizations
-- Saved trained model for future predictions
+- Processed 1248 speech recordings from the RAVDESS dataset
+- Extracted 40 MFCC features from every audio sample
+- Classified 7 distinct human emotions
+- Achieved 60.00% test accuracy
+- Achieved 40.94% cross-validation accuracy
+- Generated confusion matrix and emotion distribution visualizations
+- Generated feature importance analysis
+- Saved trained model for future emotion prediction
+- Implemented modular function-based code structure
+- Produced automated reports and visualizations
+```
+
+## Project Highlights
+
+- Speech Emotion Recognition using Machine Learning
+- MFCC Feature Extraction using Librosa
+- Random Forest Classification
+- Cross Validation Evaluation
+- Automated Result Generation
+- Data Visualization using Matplotlib and Seaborn
+- Model Persistence using Joblib
+- Professional GitHub Project Structure
 
 ## Author
 
