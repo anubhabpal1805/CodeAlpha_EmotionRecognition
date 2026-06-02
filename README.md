@@ -22,6 +22,17 @@ The Ryerson Audio-Visual Database of Emotional Speech and Song (RAVDESS) is a wi
 - Actors: **24 Professional Actors**
 - Language: **English**
 
+## Dataset Download
+
+The RAVDESS dataset is not included in this repository due to its large size.
+
+Download it from:
+https://www.kaggle.com/datasets/uwrfkaggler/ravdess-emotional-speech-audio
+
+After downloading, extract the dataset and place the folders inside:
+
+dataset/
+
 ### Emotions Detected
 
 | Emotion Code | Emotion |
