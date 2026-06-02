@@ -238,6 +238,21 @@ plt.close()
 
 print("Emotion distribution graph saved!")
 
+importance = model.feature_importances_
+
+plt.figure(figsize=(10,6))
+plt.barh(range(len(importance)), importance)
+
+plt.title("Feature Importance")
+plt.xlabel("Importance Score")
+plt.ylabel("MFCC Features")
+
+plt.tight_layout()
+plt.savefig("feature_importance.png")
+plt.close()
+
+print("Feature importance graph saved!")
+
 # ======================================
 # Finished
 # ======================================
