@@ -1,3 +1,4 @@
+
 import os
 import librosa
 import numpy as np
@@ -6,8 +7,14 @@ import joblib
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import (
+    train_test_split
+)
+
+from sklearn.ensemble import (
+    RandomForestClassifier
+)
+
 from sklearn.metrics import (
     accuracy_score,
     classification_report,
@@ -23,10 +30,6 @@ MODEL_PATH = "emotion_model.pkl"
 RESULTS_PATH = "results.txt"
 RANDOM_STATE = 42
 
-# ======================================
-# Emotion Labels
-# ======================================
-
 emotions = {
     "01": "neutral",
     "03": "happy",
@@ -37,224 +40,336 @@ emotions = {
     "08": "surprised"
 }
 
+
 # ======================================
 # Load Dataset
 # ======================================
 
-X = []
-y = []
+def load_dataset():
 
-print("Loading audio files...")
+    print("Loading audio files...")
 
-for actor in os.listdir(DATASET_PATH):
+    X = []
+    y = []
 
-    actor_path = os.path.join(DATASET_PATH, actor)
+    for actor in os.listdir(DATASET_PATH):
 
-    if not os.path.isdir(actor_path):
-        continue
+        actor_path = os.path.join(
+            DATASET_PATH,
+            actor
+        )
 
-    for file in os.listdir(actor_path):
-
-        if not file.endswith(".wav"):
+        if not os.path.isdir(actor_path):
             continue
 
-        emotion_code = file.split("-")[2]
+        for file in os.listdir(actor_path):
 
-        if emotion_code not in emotions:
-            continue
+            if not file.endswith(".wav"):
+                continue
 
-        file_path = os.path.join(actor_path, file)
+            emotion_code = file.split("-")[2]
 
-        try:
+            if emotion_code not in emotions:
+                continue
 
-            audio, sample_rate = librosa.load(
-                file_path,
-                duration=3,
-                offset=0.5
+            file_path = os.path.join(
+                actor_path,
+                file
             )
 
-            mfcc = librosa.feature.mfcc(
-                y=audio,
-                sr=sample_rate,
-                n_mfcc=40
-            )
+            try:
 
-            feature = np.mean(
-                mfcc.T,
-                axis=0
-            )
+                audio, sample_rate = librosa.load(
+                    file_path,
+                    duration=3,
+                    offset=0.5
+                )
 
-            X.append(feature)
-            y.append(emotions[emotion_code])
+                mfcc = librosa.feature.mfcc(
+                    y=audio,
+                    sr=sample_rate,
+                    n_mfcc=40
+                )
 
-        except Exception:
-            pass
+                feature = np.mean(
+                    mfcc.T,
+                    axis=0
+                )
 
-print("Dataset Loaded Successfully")
-print(f"Samples: {len(X)}")
+                X.append(feature)
+                y.append(
+                    emotions[emotion_code]
+                )
 
-# ======================================
-# Prepare Data
-# ======================================
+            except Exception:
+                pass
 
-X = np.array(X)
+    print("Dataset Loaded Successfully")
+    print(f"Samples: {len(X)}")
 
-X_train, X_test, y_train, y_test = train_test_split(
-    X,
-    y,
-    test_size=0.2,
-    random_state=RANDOM_STATE
-)
+    return np.array(X), y
+
 
 # ======================================
 # Train Model
 # ======================================
 
-model = RandomForestClassifier(
-    n_estimators=200,
-    random_state=RANDOM_STATE
-)
+def train_model(X_train, y_train):
 
-model.fit(
-    X_train,
-    y_train
-)
+    model = RandomForestClassifier(
+        n_estimators=200,
+        random_state=RANDOM_STATE
+    )
 
-# ======================================
-# Predictions
-# ======================================
+    model.fit(
+        X_train,
+        y_train
+    )
 
-predictions = model.predict(X_test)
+    return model
 
-accuracy = accuracy_score(
-    y_test,
-    predictions
-)
-
-# ======================================
-# Results
-# ======================================
-
-print("\n========== MODEL RESULTS ==========")
-print(f"Accuracy: {accuracy:.2%}")
-
-print("\nClassification Report:")
-report = classification_report(
-    y_test,
-    predictions
-)
-
-print(report)
 
 # ======================================
 # Save Results
 # ======================================
 
-with open(RESULTS_PATH, "w") as file:
+def save_results(
+    accuracy,
+    report
+):
 
-    file.write(
-        f"Accuracy: {accuracy:.2%}\n\n"
+    with open(
+        RESULTS_PATH,
+        "w"
+    ) as file:
+
+        file.write(
+            "Speech Emotion Recognition Results\n\n"
+        )
+
+        file.write(
+            f"Accuracy: {accuracy:.2%}\n\n"
+        )
+
+        file.write(
+            "Classification Report\n\n"
+        )
+
+        file.write(report)
+
+    print(
+        "\nResults saved successfully!"
     )
 
-    file.write(
-        "Classification Report\n\n"
-    )
-
-    file.write(report)
-
-print("\nResults saved successfully!")
 
 # ======================================
-# Save Model
+# Plot Confusion Matrix
 # ======================================
 
-joblib.dump(
-    model,
-    MODEL_PATH
-)
-
-print("Model saved successfully!")
-
-# ======================================
-# Confusion Matrix
-# ======================================
-
-cm = confusion_matrix(
+def plot_confusion_matrix(
     y_test,
     predictions
-)
+):
 
-plt.figure(figsize=(8, 6))
+    cm = confusion_matrix(
+        y_test,
+        predictions
+    )
 
-sns.heatmap(
-    cm,
-    annot=True,
-    fmt="d"
-)
+    plt.figure(
+        figsize=(8, 6)
+    )
 
-plt.title(
-    "Emotion Recognition Confusion Matrix"
-)
+    sns.heatmap(
+        cm,
+        annot=True,
+        fmt="d",
+        cmap="Blues"
+    )
 
-plt.xlabel("Predicted")
-plt.ylabel("Actual")
+    plt.title(
+        "Emotion Recognition Confusion Matrix"
+    )
 
-plt.tight_layout()
+    plt.xlabel("Predicted")
+    plt.ylabel("Actual")
 
-plt.savefig(
-    "confusion_matrix.png"
-)
+    plt.tight_layout()
 
-plt.close()
+    plt.savefig(
+        "confusion_matrix.png"
+    )
 
-print("Confusion matrix saved!")
+    plt.close()
 
-# ======================================
-# Emotion Distribution
-# ======================================
+    print(
+        "Confusion matrix saved!"
+    )
 
-emotion_counts = pd.Series(y).value_counts()
-
-plt.figure(figsize=(8, 5))
-
-emotion_counts.plot(
-    kind="bar"
-)
-
-plt.title(
-    "Emotion Distribution"
-)
-
-plt.xlabel("Emotion")
-plt.ylabel("Count")
-
-plt.tight_layout()
-
-plt.savefig(
-    "emotion_distribution.png"
-)
-
-plt.close()
-
-print("Emotion distribution graph saved!")
-
-importance = model.feature_importances_
-
-plt.figure(figsize=(10,6))
-plt.barh(range(len(importance)), importance)
-
-plt.title("Feature Importance")
-plt.xlabel("Importance Score")
-plt.ylabel("MFCC Features")
-
-plt.tight_layout()
-plt.savefig("feature_importance.png")
-plt.close()
-
-print("Feature importance graph saved!")
 
 # ======================================
-# Finished
+# Plot Emotion Distribution
 # ======================================
 
-print("\nProject executed successfully!")
+def plot_distribution(y):
+
+    emotion_counts = pd.Series(
+        y
+    ).value_counts()
+
+    plt.figure(
+        figsize=(8, 5)
+    )
+
+    emotion_counts.plot(
+        kind="bar"
+    )
+
+    plt.title(
+        "Emotion Distribution"
+    )
+
+    plt.xlabel("Emotion")
+    plt.ylabel("Count")
+
+    plt.tight_layout()
+
+    plt.savefig(
+        "emotion_distribution.png"
+    )
+
+    plt.close()
+
+    print(
+        "Emotion distribution graph saved!"
+    )
+
+
+# ======================================
+# Plot Feature Importance
+# ======================================
+
+def plot_feature_importance(
+    model
+):
+
+    importance = (
+        model.feature_importances_
+    )
+
+    plt.figure(
+        figsize=(10, 6)
+    )
+
+    plt.barh(
+        range(len(importance)),
+        importance
+    )
+
+    plt.title(
+        "Feature Importance"
+    )
+
+    plt.xlabel(
+        "Importance Score"
+    )
+
+    plt.ylabel(
+        "MFCC Features"
+    )
+
+    plt.tight_layout()
+
+    plt.savefig(
+        "feature_importance.png"
+    )
+
+    plt.close()
+
+    print(
+        "Feature importance graph saved!"
+    )
+
+
+# ======================================
+# Main Function
+# ======================================
+
+def main():
+
+    X, y = load_dataset()
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X,
+        y,
+        test_size=0.2,
+        random_state=RANDOM_STATE
+    )
+
+    model = train_model(
+        X_train,
+        y_train
+    )
+
+    predictions = model.predict(
+        X_test
+    )
+
+    accuracy = accuracy_score(
+        y_test,
+        predictions
+    )
+
+    report = classification_report(
+        y_test,
+        predictions
+    )
+
+    print(
+        "\n========== MODEL RESULTS =========="
+    )
+
+    print(
+        f"Accuracy: {accuracy:.2%}"
+    )
+
+    print(
+        "\nClassification Report:"
+    )
+
+    print(report)
+
+    save_results(
+        accuracy,
+        report
+    )
+
+    joblib.dump(
+        model,
+        MODEL_PATH
+    )
+
+    print(
+        "Model saved successfully!"
+    )
+
+    plot_confusion_matrix(
+        y_test,
+        predictions
+    )
+
+    plot_distribution(
+        y
+    )
+
+    plot_feature_importance(
+        model
+    )
+
+    print(
+        "\nProject executed successfully!"
+    )
+
+
+if __name__ == "__main__":
+    main()
