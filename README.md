@@ -163,6 +163,8 @@ The following graph shows the distribution of emotion samples present in the dat
 
 ## Feature Importance
 
+The graph below shows the relative importance of extracted MFCC features used by the Random Forest classifier.
+
 ![Feature Importance](feature_importance.png)
 
 ## Generated Files
@@ -178,6 +180,7 @@ The following graph shows the distribution of emotion samples present in the dat
 | feature_importance.csv | Feature importance ranking |
 | README.md | Project documentation |
 | requirements.txt | Required Python libraries |
+
 ---
 
 ## Installation
@@ -185,7 +188,7 @@ The following graph shows the distribution of emotion samples present in the dat
 ### Clone Repository
 
 ```bash
-git clone https://github.com/yourusername/EmotionRecognition.git
+git clone https://github.com/anubhabpal1805/CodeAlpha_EmotionRecognition.git
 ```
 
 ### Navigate to Project Folder
@@ -260,9 +263,6 @@ Project executed successfully!
 
 ---
 
-### Key Achievements
-
-```md
 ## Key Achievements
 
 - Processed 1248 speech recordings from the RAVDESS dataset
@@ -275,7 +275,6 @@ Project executed successfully!
 - Saved trained model for future emotion prediction
 - Implemented modular function-based code structure
 - Produced automated reports and visualizations
-```
 
 ## Project Highlights
 
